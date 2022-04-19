@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+
+  api:
+    container_name: flask_api
+    restart: always
+    build: ./api
+    volumes: ['./api:/api']
+    
+    expose:
+      - "5000"
+    # 'Expose' just exposes ports internally - want that
+    # Do not want to expose port 5000 externally - do NOT bind anything with 'ports'
+    #ports: 
+    # - "5000:5000"
+
+  nginx:
+    container_name: nginx
+    restart: always
+    build: ./nginx
+    
+    ports:
+      - "8080:8080"
+      - "80:80"
+      - "443:443"
+
+# Ports
+# Port 443 Opened for HTTPS / SSL
+# Port 8080 Main Endpoint Nginx HTTPS / SSL
+# Port 80 for Testing gives Error 301 
+
+# Docker-Compose Commands
+# docker-compose build
+# docker-compose up
+# docker-compose up --build
+
+# Docker Commands
+# >docker ps -a     Show ALL Containers
+# >docker images     - Show ALL Docker Images
+# >docker stop <container id>     Stop a Running Container
+# >docker rm <container id>     Delete a Container
+# >docker rmi <image id>     Delete a Docker Image
+
+# Testing
+# https://localhost:8080
+# https://localhost:8080/admin
+# http://localhost:80 - gives 400 error
