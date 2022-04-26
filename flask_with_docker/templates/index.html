@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <!-- request using axios -->
+        <script type = "text/javascript">
+           const axios = require('axios').default;
+           axios.get('http:127.0.0.1:5000/allstores')
+            .then(function (response) {
+            // handle success
+            console.log(response);
+            })
+            .catch(function (error) {
+            // handle error
+            console.log(error);
+            })
+            .then(function () {
+            //always
+            console.log('done!')
+            }); 
+        </script>
+    </head>
+<body>
+    <div id="myElement">
+        Hello, world!
+    </div>
+</body>
+</html>
+
+<!--  Request using XMLHttpRequest -->
+<!-- <script type = "text/javascript">
+            function httpGetAsync(url, callback) {
+                var http = new XMLHttpRequest();
+                xmlHttp.onreadystatechange = function() {
+                    if(xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                    callback(xmlHttp.responseText);
+                }
+                xmlHttp.open('GET', url, true);
+                xmlHttp.send(null);
+            }
+            
+            httpGetAsync("http:127.0.0.1:5000/allstores", () => {
+                alert(response)
+            })
+        </script> -->

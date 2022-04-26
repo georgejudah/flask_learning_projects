@@ -1,0 +1,1 @@
+used jinja2 templating in base.html for example {% for todo in todo_list %} and for var {{ todo.id}}
