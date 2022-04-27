@@ -12,7 +12,12 @@ class Todo(db.Model):
     title = db.Column(db.String(100))
     complete = db.Column(db.Boolean)
 
-db.create_all()
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password = db.Column(db.String(120), nullable=False)
+
+# db.create_all()
 
 def login_required(func):
     @functools.wraps(func)
@@ -58,7 +63,7 @@ def delete(todo_id):
 
 
 #users handling
-users = {"jose": ("jose", "1234")}
+# users = {"jose": ("jose", "1234")}
 app.secret_key = "jose"
 
 @app.route("/login", methods=["GET", "POST"])
@@ -67,9 +72,17 @@ def login():
         username = request.form.get("username")
         password = request.form.get("password")
 
-        if username in users and users[username][1] == password:
-            session["username"] = username
-            return redirect(url_for("home"))
+        # if(db.session.query(User).filter(User.username == username)).first():
+        if(User.query.filter(User.username == username)).first():
+            if(User.query.filter(User.password == password)).first():
+                print("Passwords match and user found")
+                session["username"] = username
+                return redirect(url_for("home"))
+        return render_template("login.html")
+
+        # if username in users and users[username][1] == password:
+        #     session["username"] = username
+            # return redirect(url_for("home"))
     return render_template("login.html")
 
 @app.route("/register", methods=["GET","POST"])
@@ -78,8 +91,18 @@ def register():
         username = request.form.get("username")
         password = request.form.get("password")
 
-        if username not in users:
-            users[username] = (username, password)
+        if(User.query.filter(User.username != username)).first():
+            new_user = User(username=username, password=password)
+            db.session.add(new_user)
+            db.session.commit()
+        else:
+            user_already_registered = True
+            return render_template("register.html", user_already_registered=user_already_registered)
+
+
+
+        # if username not in users:
+        #     users[username] = (username, password)
     return render_template("register.html")
 
 @app.route("/logout")

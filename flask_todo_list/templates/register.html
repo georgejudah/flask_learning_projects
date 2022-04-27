@@ -11,6 +11,14 @@
   <body>
     <h1>Register</h1>
     <form class="ui form" method="post">
+    {% if user_already_registered == True %}
+    <div class="ui message">
+        <div class="header">
+          Username already exists
+        </div>
+        <p>Please enter a different username</p>
+      </div>
+    {% endif %}
     <div class= 'field'>
       <label>Username: <input type="text" name="username"/></label>
       <label>Password: <input type="password" name="password"/></label>
