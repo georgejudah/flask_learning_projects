@@ -26,14 +26,14 @@ def add():
     db.session.commit()
     return redirect(url_for("home"))
 
-@app.get("/update/<int:todo_id>")
+@app.route("/update/<int:todo_id>", methods=["GET", "PUT"])
 def update(todo_id):
     todo = db.session.query(Todo).filter(Todo.id == todo_id).first()
     todo.complete = not todo.complete
     db.session.commit()
     return redirect(url_for("home"))
 
-@app.get("/delete/<int:todo_id>")
+@app.route("/delete/<int:todo_id>", methods=["GET","DELETE"])
 def delete(todo_id):
     todo = db.session.query(Todo).filter(Todo.id == todo_id).first()
     db.session.delete(todo)
