@@ -19,7 +19,7 @@ def login_required(func):
     def secure_function(*args, **kwargs):
         if "username" not in session:
             return redirect(url_for("login"))
-        return func()
+        return func(*args, **kwargs)
     return secure_function
 
 @app.get("/")
