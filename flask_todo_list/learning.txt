@@ -1,1 +1,5 @@
 used jinja2 templating in base.html for example {% for todo in todo_list %} and for var {{ todo.id}}
+
+https://blog.teclado.com/protecting-endpoints-in-flask-apps-by-requiring-login/
+https://blog.teclado.com/how-to-add-user-logins-to-your-flask-website/
+https://github.com/tecladocode/simple-flask-template-app

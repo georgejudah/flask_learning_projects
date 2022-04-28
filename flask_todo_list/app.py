@@ -78,7 +78,10 @@ def login():
                 print("Passwords match and user found")
                 session["username"] = username
                 return redirect(url_for("home"))
-        return render_template("login.html")
+        
+        password_match = False
+        print("No password match")       
+        return render_template("login.html", password_match=password_match)
 
         # if username in users and users[username][1] == password:
         #     session["username"] = username
