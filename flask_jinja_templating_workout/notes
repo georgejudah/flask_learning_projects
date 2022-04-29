@@ -1,0 +1,92 @@
+Flask comes packaged with the powerful Jinja templating language.
+
+For those who have not been exposed to a templating language before, such languages essentially contain variables as well as some programming logic, which when evaluated (or rendered into HTML) are replaced with actual values.
+
+The variables and/or logic are placed between tags or delimiters. For example, Jinja templates use {% ... %} for expressions or logic (like for loops), while {{ ... }} is used for outputting the results of an expression or a variable to the end user. The latter tag, when rendered, is replaced with a value or values, and is seen by the end user.
+
+Template Inheritance
+Templates usually take advantage of inheritance, which includes a single base template that defines the basic structure of all subsequent child templates. You use the tags {% extends %} and {% block %} to implement inheritance.
+
+The use case for this is simple: as your application grows, and you continue adding new templates, you will need to keep common code (like an HTML navigation bar, Javascript libraries, CSS stylesheets, and so forth) in sync, which can be a lot of work. Using inheritance, we can move those common pieces to a parent/base template so that we can create or edit such code once, and all child templates will inherent that code.
+
+{% block %} tags? in the layout.html file This defines a block (or area) that child templates can fill in. Further, this just informs the templating engine that a child template may override the block of the template.
+
+Note: Think of these as placeholders to be filled in by code from the child template(s).
+
+
+Problems I faced, after setting up I ran the app, couldn't figure out why I couldn't see templatate inheritance working,
+What happend and How I fixed:
+Instead of Rendering the child template, I was rendering the parent template in the main.py app
+
+Super Blocks
+If you need to render a block from the base template, use a super block:
+for example
+ {% block footer %}
+  {{super()}}
+{% endblock %}
+
+super renders a block from the base template
+usage : - The super block is used for common code that both the parent and child templates share, such as the <title>, where both templates share part of the title. Then, you would just need to pass in the other part. It could also be used for a heading.
+
+Here’s an example:
+Parent
+
+{% block heading %}
+  <h1>{% block page %}{% endblock %} - Flask Super Example</h1>
+{% endblock %}
+
+Child
+
+{% block page %}Home{% endblock %}
+{% block heading %}
+  {{ super() }}
+{% endblock %}
+
+Macros
+In Jinja, we can use macros to abstract commonly used code snippets that are used over and over to not repeat ourselves. For example, it’s common to highlight the link of the current page on the navigation bar (active link). Otherwise, we’d have to use if/elif/else statements to determine the active link. Using macros, we can abstract out such code into a separate file.
+
+Add a macros.html file to the templates directory:
+
+{% macro nav_link(endpoint, name) %}
+{% if request.endpoint.endswith(endpoint) %}
+  <li class="active"><a href="{{ url_for(endpoint) }}">{{name}}</a></li>
+{% else %}
+  <li><a href="{{ url_for(endpoint) }}">{{name}}</a></li>
+{% endif %}
+{% endmacro %}
+
+Here, we’re using Flask’s request object, which is part of Jinja by default, to check the requested endpoint, and then assigning the active class to that endpoint.
+
+Update the unordered list with the nav navbar-nav class in the base template:
+
+<ul class="nav navbar-nav">
+  {{ nav_link('home', 'Home') }}
+  {{ nav_link('about', 'About') }}
+  {{ nav_link('contact', 'Contact Us') }}
+</ul>
+Also, make sure to add the import at the top of the template: {% from "macros.html" import nav_link with context %}.
+
+Notice how we’re calling the nav-link macro and passing it two arguments: the endpoint (which comes from our controller) and the text we want displayed.
+
+Finally, let’s add new endpoints to the controller:
+@app.route("/")
+def home():
+    return render_template('update.html', my_string="Wheeeee!", my_list=[0,1,2,3,4,5])
+
+@app.route("/about")
+def about():
+    return render_template(
+        'update.html', my_string="Wheeeee!", 
+        my_list=[0,1,2,3,4,5], title="About")
+
+@app.route("/contact")
+def contact():
+    return render_template(
+        'update.html', my_string="Wheeeee!", 
+        my_list=[0,1,2,3,4,5], title="Contact Us")
+
+
+https://realpython.com/primer-on-jinja-templating/
+
+
+
